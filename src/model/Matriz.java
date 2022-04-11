@@ -251,37 +251,76 @@ public class Matriz {
 
     /*------------------------------------- PUNTO 4---------------------------------- */
 
-
+    /**
+     * Método que verifica si el número @num pasado en el argumento se repite en las posiciones no diagonales
+     * inmediatamente contiguas.
+     *
+     * @param matriz Matriz a evaluar
+     * @param num    Número buscado
+     * @return True de cumplir la condición.
+     */
     public boolean verificarConsecutivos(int[][] matriz, int num) {
 
         // f = fila.
         // c = columna.
 
         //Condición que verifica la condición de manera horizontal.
-        for (int f = 0, c = 0; f < matriz.length; c++ ) {
-            if (matriz[f][c] == matriz[f][c+1]){
-                return true;
+        for (int f = 0; f < matriz.length; f++) {
+            for (int c = 0; c < matriz[0].length - 1; c++) {
+
+                if (matriz[f][c] == num && matriz[f][c] == matriz[f][c + 1])
+                    return true;
             }
-            if(c== matriz[0].length -1){
-                c=0;
-                f++;
-            }
+
         }
 
         //Condición que verifica la condición de manera vertical.
-        for (int f = 0, c = 0; c < matriz[0].length; f++ ) {
-            if (matriz[f][c] == matriz[f+1][c]){
-                return true;
-            }
-            if(c == matriz[0].length -1){
-                c=0;
-                f++;
+        for (int c = 0; c < matriz[0].length; c++) {
+            for (int f = 0; f < matriz.length - 1; f++) {
+
+                if (matriz[f][c] == num && matriz[f][c] == matriz[f + 1][c])
+                    return true;
+
             }
         }
-
-
-
         return false;
+    }
+
+    /*------------------------------------- PUNTO 5---------------------------------- */
+
+   public char[][] generarMatrizAsteriscos(int dimension) {
+
+       char[][] matriz = new char[dimension][dimension];
+
+
+       for (int c = 0; estaColumnaVacia(matriz, matriz[0].length/2 +1); c++) {
+            int contador = c+1;
+
+            //Ciclo que llena el arreglo de forma superior.
+           for (int f=0, j=contador;  j>0; f++, j--) {
+               matriz[f][c] = '*';
+           }
+
+           for (int f = matriz.length-1, j=contador; j>0 ; f--, j--) {
+
+           }
+
+
+
+       }
+
+       return matriz;
+   }
+
+
+    public boolean estaColumnaVacia(char[][] matriz, int columna) {
+
+           for (int i = 0; i < matriz.length; i++) {
+               if (matriz[i][columna] != '\0'){
+                   return false;
+               }
+           }
+        return true;
     }
 
 }
