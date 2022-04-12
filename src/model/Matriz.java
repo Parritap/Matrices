@@ -7,7 +7,7 @@ import java.util.Arrays;
 public class Matriz {
 
     /**
-     * Método que imprime una matriz 2x2 de enteros.
+     * Método que imprime una matriz de enteros.
      */
     public void print(int matrix[][]) {
         for (int[] element : matrix
@@ -15,6 +15,18 @@ public class Matriz {
             System.out.println(Arrays.toString(element));
         }
     }
+
+    /**
+     * Método que imprime una matriz de caracteres.
+     */
+    public void print(char matrix[][]) {
+        for (char[] element : matrix
+        ) {
+            System.out.println(Arrays.toString(element));
+        }
+    }
+
+
 
 
     /*----------------------------A continuación el PUNTO 1 del taller-------------------------------------------*/
@@ -288,31 +300,53 @@ public class Matriz {
 
     /*------------------------------------- PUNTO 5---------------------------------- */
 
-   public char[][] generarMatrizAsteriscos(int dimension) {
+
+    /**
+     * Método que genera una matriz cuadra de asteriscos y espacios de la dimensión indicada en el argumento.
+     * El patron generado es el siguiente:
+     *          [*, *, *, *, *]
+     *          [ , *, *, *,  ]
+     *          [ ,  , *,  ,  ]
+     *          [ , *, *, *,  ]
+     *          [*, *, *, *, *]
+     * @param dimension Dimensión de la matriz en cuestión. Ha de ser mayor que 0.
+     * @return Una matriz de caracteres con las características indicadas.
+     * @throws MatrixException Excepción lanzada en caso de que la dimensión indicada en el argumento sea igual o menor que 0.
+     */
+   public char[][] generarMatrizAsteriscos (int dimension) throws MatrixException{
+
+       if (dimension<= 0)
+           throw new MatrixException("La dimensión de la matriz no puede ser igual o menor que 0.");
 
        char[][] matriz = new char[dimension][dimension];
 
 
-       for (int c = 0; estaColumnaVacia(matriz, matriz[0].length/2 +1); c++) {
+       for (int c = 0; estaColumnaVacia(matriz, matriz[0].length/2); c++) {
             int contador = c+1;
 
-            //Ciclo que llena el arreglo de forma superior.
+            //Ciclo que llena el arreglo desde la esquina superior izquierda.
            for (int f=0, j=contador;  j>0; f++, j--) {
                matriz[f][c] = '*';
            }
 
+           //Ciclo que llena el arreglo desde la esquina inferior izquierda.
            for (int f = matriz.length-1, j=contador; j>0 ; f--, j--) {
-
+                matriz[f][c] = '*';
            }
-
-
-
        }
+
+       reflejarMatriz(matriz);
 
        return matriz;
    }
 
 
+    /**
+     * Método que verifica si cierta columna de una matriz completamente vacía
+     * @param matriz Matriz a inspeccionar.
+     * @param columna Columna a inspeccionar.
+     * @return False si al menos de los caracteres de la @columna es diferente de [null] o [vacio] o '' o '\0'. (Todo lo anterior es igual).
+     */
     public boolean estaColumnaVacia(char[][] matriz, int columna) {
 
            for (int i = 0; i < matriz.length; i++) {
@@ -323,5 +357,29 @@ public class Matriz {
         return true;
     }
 
-}
 
+    /**
+     * Método que refleja la mitad derecha de una matriz respecto de su mitad izquierda. Esto es, copia la mitad izquierda de la matriz
+     * para luego copiarla en la mitad derecha de la misma.
+     * Si la matriz es de orden impar, entonces se ignora la fila que divide a la matriz justo por la mitad. De ser de orden par, esto no sucede.
+     * @param matriz Matriz a modificar.
+     */
+    public void reflejarMatriz (char[][] matriz){
+
+       int aux = matriz[0].length / 2;
+
+        for (int i=0, j= matriz.length-1; aux > 0 ; i++, j--, aux--) {
+
+            for (int k = 0; k < matriz.length; k++) {
+                matriz[k][j] = matriz [k][i];
+            }
+        }
+    }
+
+
+    /*------------------------------------- PUNTO 6---------------------------------- */
+
+
+
+    public int [][]
+}
