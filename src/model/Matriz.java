@@ -2,7 +2,9 @@ package model;
 
 import exceptions.MatrixException;
 
+import java.sql.SQLOutput;
 import java.util.Arrays;
+import java.util.Scanner;
 
 public class Matriz {
 
@@ -304,56 +306,58 @@ public class Matriz {
     /**
      * Método que genera una matriz cuadra de asteriscos y espacios de la dimensión indicada en el argumento.
      * El patron generado es el siguiente:
-     *          [*, *, *, *, *]
-     *          [ , *, *, *,  ]
-     *          [ ,  , *,  ,  ]
-     *          [ , *, *, *,  ]
-     *          [*, *, *, *, *]
+     * [*, *, *, *, *]
+     * [ , *, *, *,  ]
+     * [ ,  , *,  ,  ]
+     * [ , *, *, *,  ]
+     * [*, *, *, *, *]
+     *
      * @param dimension Dimensión de la matriz en cuestión. Ha de ser mayor que 0.
      * @return Una matriz de caracteres con las características indicadas.
      * @throws MatrixException Excepción lanzada en caso de que la dimensión indicada en el argumento sea igual o menor que 0.
      */
-   public char[][] generarMatrizAsteriscos (int dimension) throws MatrixException{
+    public char[][] generarMatrizAsteriscos(int dimension) throws MatrixException {
 
-       if (dimension<= 0)
-           throw new MatrixException("La dimensión de la matriz no puede ser igual o menor que 0.");
+        if (dimension <= 0)
+            throw new MatrixException("La dimensión de la matriz no puede ser igual o menor que 0.");
 
-       char[][] matriz = new char[dimension][dimension];
+        char[][] matriz = new char[dimension][dimension];
 
 
-       for (int c = 0; estaColumnaVacia(matriz, matriz[0].length/2); c++) {
-            int contador = c+1;
+        for (int c = 0; estaColumnaVacia(matriz, matriz[0].length / 2); c++) {
+            int contador = c + 1;
 
             //Ciclo que llena el arreglo desde la esquina superior izquierda.
-           for (int f=0, j=contador;  j>0; f++, j--) {
-               matriz[f][c] = '*';
-           }
-
-           //Ciclo que llena el arreglo desde la esquina inferior izquierda.
-           for (int f = matriz.length-1, j=contador; j>0 ; f--, j--) {
+            for (int f = 0, j = contador; j > 0; f++, j--) {
                 matriz[f][c] = '*';
-           }
-       }
+            }
 
-       reflejarMatriz(matriz);
+            //Ciclo que llena el arreglo desde la esquina inferior izquierda.
+            for (int f = matriz.length - 1, j = contador; j > 0; f--, j--) {
+                matriz[f][c] = '*';
+            }
+        }
 
-       return matriz;
-   }
+        reflejarMatriz(matriz);
+
+        return matriz;
+    }
 
 
     /**
      * Método que verifica si cierta columna de una matriz completamente vacía
-     * @param matriz Matriz a inspeccionar.
+     *
+     * @param matriz  Matriz a inspeccionar.
      * @param columna Columna a inspeccionar.
      * @return False si al menos de los caracteres de la @columna es diferente de [null] o [vacio] o '' o '\0'. (Todo lo anterior es igual).
      */
     public boolean estaColumnaVacia(char[][] matriz, int columna) {
 
-           for (int i = 0; i < matriz.length; i++) {
-               if (matriz[i][columna] != '\0'){
-                   return false;
-               }
-           }
+        for (int i = 0; i < matriz.length; i++) {
+            if (matriz[i][columna] != '\0') {
+                return false;
+            }
+        }
         return true;
     }
 
@@ -362,16 +366,17 @@ public class Matriz {
      * Método que refleja la mitad derecha de una matriz respecto de su mitad izquierda. Esto es, copia la mitad izquierda de la matriz
      * para luego copiarla en la mitad derecha de la misma.
      * Si la matriz es de orden impar, entonces se ignora la fila que divide a la matriz justo por la mitad. De ser de orden par, esto no sucede.
+     *
      * @param matriz Matriz a modificar.
      */
-    public void reflejarMatriz (char[][] matriz){
+    public void reflejarMatriz(char[][] matriz) {
 
-       int aux = matriz[0].length / 2;
+        int aux = matriz[0].length / 2;
 
-        for (int i=0, j= matriz.length-1; aux > 0 ; i++, j--, aux--) {
+        for (int i = 0, j = matriz.length - 1; aux > 0; i++, j--, aux--) {
 
             for (int k = 0; k < matriz.length; k++) {
-                matriz[k][j] = matriz [k][i];
+                matriz[k][j] = matriz[k][i];
             }
         }
     }
@@ -380,6 +385,125 @@ public class Matriz {
     /*------------------------------------- PUNTO 6---------------------------------- */
 
 
+    /**
+     * Método que genera una matriz que imprime números (y estos de forma creciente) de manera que se sigue un patrón
+     * en forma de serpiente en el que se imprime por columnas, id est, en vez de continuar la cuenta (una vez se terminase de imprimir toda una columna)
+     * en el principio de la siguiente columna, se salta de columna sin cambiar la fila.
+     * <p>
+     * Exempli Gratia:
+     * <p>
+     * [1, 8, 9,  16]
+     * [2, 7, 10, 15]
+     * [3, 6, 11, 14]
+     * [4, 5, 12, 13]
+     *
+     * @param dimension
+     * @return
+     * @throws MatrixException
+     */
+    public int[][] generarMatrizSerpiente(int dimension) throws MatrixException {
 
-    public int [][]
+        int[][] matriz = generarCuadrada(dimension);
+        int num = 1;
+        int cLimit = matriz[0].length;
+
+        for (int c = 0; c < cLimit; ) {
+
+            for (int f = 0; f < matriz.length && c < cLimit; f++, num++) {
+                matriz[f][c] = num;
+
+                if (f == matriz.length - 1)
+                    c++;
+            }
+
+            for (int f = matriz.length - 1; f >= 0 && c < cLimit; f--, num++) {
+                matriz[f][c] = num;
+
+                if (f == 0)
+                    c++;
+            }
+        }
+        return matriz;
+    }
+
+
+    /*------------------------------------- PUNTO 7---------------------------------- */
+
+
+    public char[][] generarMatrizEdificio(int numFilas, int numColumnas) throws MatrixException {
+
+        verificarDimension(numFilas);
+        verificarDimension(numColumnas);
+
+        char[][] matriz = new char[numColumnas][numFilas];
+
+        //Ciclo que rellena del carácter cuadrado ('\254') la primera y última columna.
+        for (int i = 0, j = matriz[0].length - 1, k = 0; k < matriz.length; k++) {
+            matriz[k][i] = '-';
+            matriz[k][j] = '-';
+        }
+
+        //Ciclo que rellena las filas pares. 
+
+        for (int i = 0; i < matriz.length; i += 2) {
+            for (int j = 0; j < matriz[i].length; j++) {
+                matriz[i][j] = '-';
+            }
+        }
+
+      int contador = 49;
+      for (int i = 0; i < matriz.length; i++) {
+          for (int j = 0; j < matriz[i].length; j++) {
+              if (matriz[i][j] == '\0') {
+                  matriz[i][j] = (char) contador;
+                  contador++;
+              }
+          }
+      }
+        return matriz;
+    }
+
+    public void llenarEspacioVacios(char[][] matriz) {
+
+        int cantidadVacios = 0;
+        StringBuilder indicadorVacios = new StringBuilder();
+
+        for (int i = 0; i < matriz.length; i++) {
+            for (int j = 0; j < matriz[i].length; j++) {
+                if (matriz[i][j] == '\0') {
+                    cantidadVacios++;
+                    indicadorVacios.append("Vacío # " + cantidadVacios + " en la fila [" + i + "] y la  columna [" + j + "]");
+                }
+            }
+        }
+
+        Scanner s = new Scanner(System.in);
+
+        System.out.println("¿Desea cambiar alguno de los espacios en blanco indicado con los números (o caracteres)?\n" +
+                "Si desea cambiar alguno presione 'y', de lo contrario escriba cualquier otra tecla o pulse [ENTER].");
+
+        String option = s.nextLine();
+
+        if (option == "y" || option == "Y") {
+
+            System.out.print("Presione el caracter del espacio que desea cambiar: ");
+            String option2 = s.nextLine();
+
+            for (int i = 0; i < matriz.length; i++) {
+                for (int j = 0; j < matriz[i].length; j++) {
+
+                    if (matriz[i][j] == option2.charAt(0)) ;
+                    {
+                        System.out.print("Presiona el caracter por el que desea cambiar el espacio");
+                        String nuevoChar = s.nextLine();
+                        matriz[i][j] = nuevoChar.charAt(0);
+                        System.out.println("El espacio ha sido cambiado");
+                    }
+                }
+            }
+
+        }
+
+
+    }
 }
