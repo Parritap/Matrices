@@ -429,7 +429,21 @@ public class Matriz {
 
     /*------------------------------------- PUNTO 7---------------------------------- */
 
-
+    /**
+     * Método que genera una matriz de las dimensiones indicadas en el argumento, de manera que se sigue un patrón
+     * como el siguinte:
+     * <p>
+     * [-, -, -, -, -]
+     * [-, 1, 2, 3, -]
+     * [-, -, -, -, -]
+     * [-, 4, 5, 6, -]
+     * [-, -, -, -, -]
+     *
+     * @param numFilas    Cantidad de filas
+     * @param numColumnas Cantidad de columna
+     * @return Matriz de las características indicadas.
+     * @throws MatrixException Excepción lanzada si las dimensiones indicadas son menores que 1.
+     */
     public char[][] generarMatrizEdificio(int numFilas, int numColumnas) throws MatrixException {
 
         verificarDimension(numFilas);
@@ -443,7 +457,7 @@ public class Matriz {
             matriz[k][j] = '-';
         }
 
-        //Ciclo que rellena las filas pares. 
+        //Ciclo que rellena las filas pares.
 
         for (int i = 0; i < matriz.length; i += 2) {
             for (int j = 0; j < matriz[i].length; j++) {
@@ -451,15 +465,15 @@ public class Matriz {
             }
         }
 
-      int contador = 49;
-      for (int i = 0; i < matriz.length; i++) {
-          for (int j = 0; j < matriz[i].length; j++) {
-              if (matriz[i][j] == '\0') {
-                  matriz[i][j] = (char) contador;
-                  contador++;
-              }
-          }
-      }
+        int contador = 49;
+        for (int i = 0; i < matriz.length; i++) {
+            for (int j = 0; j < matriz[i].length; j++) {
+                if (matriz[i][j] == '\0') {
+                    matriz[i][j] = (char) contador;
+                    contador++;
+                }
+            }
+        }
         return matriz;
     }
 
@@ -506,4 +520,163 @@ public class Matriz {
 
 
     }
+
+    /*------------------------------------- PUNTO 8---------------------------------- */
+
+
+    /**
+     * Método que verifica que el tamaño de la matriz B sea igual o mayor que el tamao de la matrizPequeña.
+     *
+     * @param matrizGrande Matriz que deberá tener el mayor tamaño; si no, el mismo que la matrizPequeña
+     * @param matrizPequeña Matriz que debe tener las menores dimensiones.
+     * @return True si el tamaño de la matriz B es mayor que le matriz A.
+     */
+    public boolean esTamañoIgualMayor(int[][] matrizGrande, int[][] matrizPequeña) {
+
+
+        //Recordar que el ancho es la cantidad de columnas, por tanto, matriz[i].length
+        int anchoA = matrizPequeña[0].length;
+        int anchoB = matrizGrande[0].length;
+
+        //Recordar que el alto es la cantidad de filas, por tanto, matriz.length
+        int altoA = matrizPequeña[0].length;
+        int altoB = matrizGrande[0].length;
+
+        //EL tamaño de B no puede ser bajo caso menor que el de A en ninguna de sus dimensiones.
+        if (altoB >= altoA && anchoB >= anchoA)
+            return true;
+
+        return false;
+    }
+
+
+    public boolean esMatrizSubconjunto(int[][] A, int[][] B) {
+        //Buscamos saber si la matriz A es subconjunto de la matriz B.
+
+        //Si el tamaño de B es menor que el de A, entonces A no es subconjunto de B.
+        if (!esTamañoIgualMayor(B, A))
+            return false;
+
+        // Si el primer elemento de A no existe dentro de B, entonces A no es subconjunto de B.
+        if (!existeElemento(A[0][0], B))
+            return false;
+
+        //Buscamos la primera posición en la que se encuentre el primer elemento de A dentro de B.
+        int[] posPrimerElem = buscarPosElemento(A[0][0], B);
+
+        int xi = posPrimerElem[1];
+        int yi = posPrimerElem[0];
+
+        //El método buscarPosElemento() nos retorna -1 en ambas posiciones en caso de que no exista el
+        //primer elemento A dentro de B. En tal caso, A no es subconjunto de B.
+        if (xi == -1)
+            return false;
+
+        /*A continuación lo que haremos será encontrar el tamaño de la matriz B solo tomando en cuenta
+            las posiciones empezando desde el primer elemento de A dentro B. Id est, sacamos la diferencia
+            de los tamaños de un cuadrado respecto de otro (recordar la integrales).
+
+            En otras palabras, ¿cabe la matriz A dentro de B si la primera empieza desde la posición posPrimerElem?
+         */
+
+        //Id est, (ancho de B)  - (posición en X del 1er elemento de A dentro de B)
+        int deltaXMatrizB = (B[0].length) - (xi);
+
+        //Id est, (altura de B) - (posición en Y del 1er elemento de A dentro de B)
+        int deltaYMatrizB = (B.length) - (yi);
+
+
+        if (deltaXMatrizB < A[0].length || deltaYMatrizB < A.length)
+            return false;
+
+        //Creamos una matriz de iguales dimensiones a las de A.
+        int[][] C = new int[A.length][A[0].length];
+
+
+        //Llenamos el nuevo arreglo C a partir de los elementos de B, llenándolo únicamente desde la posición/coordernadas del
+        // primer elemento de A dentro de B.
+        for (int i = 0, y = yi; i < C.length; i++, y++) {
+            for (int j = 0, x = xi; j < C[i].length; j++, x++) {
+                C[i][j] = B[y][x];
+            }
+        }
+
+        return sonIguales(A, C);
+    }
+
+    /**
+     * Método que retorna si existe al menos un elemento @e dentro de la @matriz.
+     *
+     * @param e      Elemento a buscar.
+     * @param matriz Matriz a inspeccionar.
+     * @return True si @e existe dentro de @matriz. De lo contario, retorna False.
+     */
+    public boolean existeElemento(int e, int[][] matriz) {
+
+        //ciclo para buscar elemento el elemento @e dentro de @matriz.
+        for (int f = 0; f < matriz.length; f++) {
+            for (int c = 0; c < matriz[f].length; c++) {
+                if (matriz[f][c] == e)
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Método que retorna un arreglo con la primera posición del @elemento dentro de una @matriz.
+     *
+     * @param elemento Elemento a bucar dentro de @matriz.
+     * @param matriz   Matriz a inspeccionar.
+     * @return Posición en la que se encuentra @elemento dentro de @matriz. De no existir @elemento dentro de la matriz, el método retornará la posición {-1,-1}.
+     */
+    public int[] buscarPosElemento(int elemento, int[][] matriz) {
+
+        int[] coordenadas = new int[2];
+        boolean posEncontrada = false;
+
+        int limHor = matriz[0].length - 1;
+        int limVer = matriz.length - 1;
+
+        //ciclo para buscar elemento el elemento @elemento dentro de @matriz.
+        for (int f = 0; f < matriz.length && !posEncontrada; f++) {          //f para filas
+            for (int c = 0; c < matriz[f].length && !posEncontrada; c++) {   //c para columnas
+                if (matriz[f][c] == elemento) {
+                    coordenadas = new int[]{f, c};
+                    posEncontrada = true;
+                }
+
+                //Esta condición se ejecuta si el elemento no existe dentro de la matriz.
+                if (f == limVer && c == limHor && !posEncontrada) {
+                    coordenadas = new int[]{-1, -1};
+                }
+            }
+        }
+        return coordenadas;
+    }
+
+
+    public boolean sonIguales(int[][] matrizA, int[][] matrizB) {
+
+        if (matrizA.length == matrizB.length) {
+
+            for (int i = 0; i < matrizA.length; i++) {
+
+                if (matrizA[i].length != matrizB[i].length)
+                    return false;
+
+                for (int j = 0; j < matrizA[i].length; j++) {
+                    if (matrizA[i][j] != matrizB[i][j])
+                        return false;
+                }
+
+                return true;
+            }
+        }
+      return false;
+    }
+
+
 }
+
+

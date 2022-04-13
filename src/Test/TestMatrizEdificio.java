@@ -9,13 +9,10 @@ public class TestMatrizEdificio {
 
         Matriz matriz = new Matriz();
 
-        char[][] matrix = matriz.generarMatrizEdificio(7, 5);
+        char[][] matrix = matriz.generarMatrizEdificio(0,0 );
 
         matriz.print(matrix);
 
-        matriz.llenarEspacioVacios(matrix);
-
-        matriz.print(matrix);
 
 
 
