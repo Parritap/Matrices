@@ -2,7 +2,6 @@ package model;
 
 import exceptions.MatrixException;
 
-import java.sql.SQLOutput;
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -25,6 +24,12 @@ public class Matriz {
         for (char[] element : matrix
         ) {
             System.out.println(Arrays.toString(element));
+        }
+    }
+
+    public void printColum(int colum, int[][] matrix ){
+        for (int i = 0; i < matrix.length; i++) {
+            System.out.println(matrix[i][colum]);
         }
     }
 
@@ -181,7 +186,10 @@ public class Matriz {
 
         return true;
     }
+
+
     /*------------------------------------------PUNTO 3---------------------------------- */
+
 
     /**
      * Método que genera una matriz cuadrada de n @dimensiones.
@@ -386,9 +394,10 @@ public class Matriz {
 
 
     /**
-     * Método que genera una matriz que imprime números (y estos de forma creciente) de manera que se sigue un patrón
-     * en forma de serpiente en el que se imprime por columnas, id est, en vez de continuar la cuenta (una vez se terminase de imprimir toda una columna)
-     * en el principio de la siguiente columna, se salta de columna sin cambiar la fila.
+     * Método que genera una matriz de nxn dimensiones, luego se llena de números (y estos de forma creciente) de manera que se sigue un patrón
+     * en forma de serpiente en el que se imprime por columnas, id est, en vez de continuar la cuenta (una vez se terminase de llenar toda una columna)
+     * en el principio de la siguiente columna, se salta de columna sin cambiar la fila, luego se llena de abajo hacia arriba,
+     * y cuando se vuelva a saltar de columna, se llena de arriba hacia abajo (simulando el movimiento que hace una serpiente).
      * <p>
      * Exempli Gratia:
      * <p>
@@ -477,6 +486,10 @@ public class Matriz {
         return matriz;
     }
 
+    /**
+     * Método que indica mediante un print la cantidad de vacios que posee una matriz.
+     * Luego, se da la opción de que el usuario llene un espacio vacio oprimiendo una letra.
+     */
     public void llenarEspacioVacios(char[][] matriz) {
 
         int cantidadVacios = 0;
@@ -525,22 +538,22 @@ public class Matriz {
 
 
     /**
-     * Método que verifica que el tamaño de la matriz B sea igual o mayor que el tamao de la matrizPequeña.
+     * Método que verifica que el tamaño de la matriz B sea igual o mayor que el tamao de la subMatriz.
      *
-     * @param matrizGrande Matriz que deberá tener el mayor tamaño; si no, el mismo que la matrizPequeña
-     * @param matrizPequeña Matriz que debe tener las menores dimensiones.
+     * @param superMatriz  Matriz que deberá tener el mayor tamaño; si no, el mismo que la subMatriz
+     * @param subMatriz Matriz que debe tener las menores dimensiones.
      * @return True si el tamaño de la matriz B es mayor que le matriz A.
      */
-    public boolean esTamañoIgualMayor(int[][] matrizGrande, int[][] matrizPequeña) {
+    public boolean esTamanioIgualMayor(int[][] superMatriz, int[][] subMatriz) {
 
 
         //Recordar que el ancho es la cantidad de columnas, por tanto, matriz[i].length
-        int anchoA = matrizPequeña[0].length;
-        int anchoB = matrizGrande[0].length;
+        int anchoA = subMatriz[0].length;
+        int anchoB = superMatriz[0].length;
 
         //Recordar que el alto es la cantidad de filas, por tanto, matriz.length
-        int altoA = matrizPequeña[0].length;
-        int altoB = matrizGrande[0].length;
+        int altoA = subMatriz.length;
+        int altoB = superMatriz.length;
 
         //EL tamaño de B no puede ser bajo caso menor que el de A en ninguna de sus dimensiones.
         if (altoB >= altoA && anchoB >= anchoA)
@@ -550,59 +563,136 @@ public class Matriz {
     }
 
 
-    public boolean esMatrizSubconjunto(int[][] A, int[][] B) {
-        //Buscamos saber si la matriz A es subconjunto de la matriz B.
+    /**
+     * Método que indica si @subMatriz es subconjunto de @superMatriz en el orden estricto en la que existe @subMatriz.
+     * @param subMatriz Matriz que se verifica que esté contenida dentro de @superMatriz
+     * @param superMatriz Matriz que se verifica que contenga a @subMatriz.
+     * @return True si @subMatriz está contenida dentro de @superMatriz en orden estricto.
+     */
+    public boolean esMatrizSubconjunto(int[][] subMatriz, int[][] superMatriz) throws MatrixException {
+        //Buscamos saber si la matriz subMatriz es subconjunto de la matriz superMatriz.
 
-        //Si el tamaño de B es menor que el de A, entonces A no es subconjunto de B.
-        if (!esTamañoIgualMayor(B, A))
+        //Si el tamaño de superMatriz es menor que el de subMatriz, entonces subMatriz no es subconjunto de superMatriz.
+        if (!esTamanioIgualMayor(superMatriz, subMatriz))
             return false;
 
-        // Si el primer elemento de A no existe dentro de B, entonces A no es subconjunto de B.
-        if (!existeElemento(A[0][0], B))
+        // Si el primer elemento de subMatriz no existe dentro de superMatriz, entonces subMatriz no es subconjunto de superMatriz.
+        if (!existeElemento(subMatriz[0][0], superMatriz))
             return false;
 
-        //Buscamos la primera posición en la que se encuentre el primer elemento de A dentro de B.
-        int[] posPrimerElem = buscarPosElemento(A[0][0], B);
+        for (int y = 0; y < superMatriz.length; y++) {
+            for (int x = 0; x < superMatriz[y].length; x++) {
+                if (superMatriz[y][x] == subMatriz[0][0]) {
 
-        int xi = posPrimerElem[1];
-        int yi = posPrimerElem[0];
+                    if (esPosibleExtraerDesdePos(x, y, superMatriz, subMatriz)) {
 
-        //El método buscarPosElemento() nos retorna -1 en ambas posiciones en caso de que no exista el
-        //primer elemento A dentro de B. En tal caso, A no es subconjunto de B.
-        if (xi == -1)
+                        int[][] subMatrizPrima = copiarMatrizSegunCoordernadas(x, y, superMatriz, subMatriz);
+
+                        if (sonIguales(subMatrizPrima, subMatriz))
+                            return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Método que indica si un arreglo es subconjunto de una @superMatriz en el orden estricto en la que existe @subMatriz.
+     * @param arreglo arreglo que se verifica que esté contenido dentro de @superMatriz
+     * @param superMatriz Matriz que se verifica que contenga a @subMatriz.
+     * @return True si @subMatriz está contenida dentro de @superMatriz en orden estricto.
+     */
+    public boolean esMatrizSubconjunto(int[] arreglo, int[][] superMatriz) throws MatrixException {
+        //Buscamos saber si el arreglo es subconjunto de la matriz superMatriz.
+        
+        //convertimos el arreglo en una matriz (porque soy muy perezoso y no quiero rehacer codigo);
+        int [][] subMatriz = convertirAMatriz(arreglo);
+        
+
+        //Si el tamaño de superMatriz es menor que el de subMatriz, entonces subMatriz no es subconjunto de superMatriz.
+        if (!esTamanioIgualMayor(superMatriz, subMatriz))
             return false;
 
-        /*A continuación lo que haremos será encontrar el tamaño de la matriz B solo tomando en cuenta
-            las posiciones empezando desde el primer elemento de A dentro B. Id est, sacamos la diferencia
-            de los tamaños de un cuadrado respecto de otro (recordar la integrales).
-
-            En otras palabras, ¿cabe la matriz A dentro de B si la primera empieza desde la posición posPrimerElem?
-         */
-
-        //Id est, (ancho de B)  - (posición en X del 1er elemento de A dentro de B)
-        int deltaXMatrizB = (B[0].length) - (xi);
-
-        //Id est, (altura de B) - (posición en Y del 1er elemento de A dentro de B)
-        int deltaYMatrizB = (B.length) - (yi);
-
-
-        if (deltaXMatrizB < A[0].length || deltaYMatrizB < A.length)
+        // Si el primer elemento de subMatriz no existe dentro de superMatriz, entonces subMatriz no es subconjunto de superMatriz.
+        if (!existeElemento(subMatriz[0][0], superMatriz))
             return false;
 
-        //Creamos una matriz de iguales dimensiones a las de A.
-        int[][] C = new int[A.length][A[0].length];
+        for (int y = 0; y < superMatriz.length; y++) {
+            for (int x = 0; x < superMatriz[y].length; x++) {
+                if (superMatriz[y][x] == subMatriz[0][0]) {
+
+                    if (esPosibleExtraerDesdePos(x, y, superMatriz, subMatriz)) {
+
+                        int[][] subMatrizPrima = copiarMatrizSegunCoordernadas(x, y, superMatriz, subMatriz);
+
+                        if (sonIguales(subMatrizPrima, subMatriz))
+                            return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Método que me dice si es posible extraer una matriz nueva del mismo tamaño de @subMatriz a partir de @superMatriz
+     * desde las coordenadas indicadas en el argumento.
+     *
+     * @param x           Número que representa la posición de la columna.
+     * @param y           Número que representa la posición de la fila.
+     * @param superMatriz Matriz a inspeccionar que deberá ser de igual o mayor tamaño que @subMatriz.
+     * @param subMatriz   Matriz que se espera quepa dentro de @superMatriz desde las coordenadas [y][x].
+     * @return True si @subMatriz cabe dentro de @superMatriz desde la posición [y][x] de @superMatriz.
+     */
+    public boolean esPosibleExtraerDesdePos(int x, int y, int[][] superMatriz, int[][] subMatriz) {
+
+        int deltaX = superMatriz[0].length - x;
+        int deltaY = superMatriz.length - y;
+
+        if (deltaX >= subMatriz[0].length && deltaY >= subMatriz.length)
+            return true;
+
+        return false;
+    }
+
+
+    /**
+     * Método que extrae una matriz de otra desde las coordenadas dadas (incluyentes). La matriz a retornar tiene las mismas dimensiones
+     * que @subMatriz (y solo para tal obtención de dimensiones existe @subMatriz). Luego se llena la nueva matriz con los elementos de @superMatriz.
+     * Id est. Si las coordenadas son x=1, y=1, entonces se ignoran la fila 0 y la columna 0, y se rellena la matriz a retornar con los valores restantes
+     * de @superMatriz mientras se puedan llenar la nueva matriz.
+     *
+     *
+     * @param coordenada_x Posición columna desde la cual empezar a copiar.
+     * @param coordenada_y Posición fila desde la cual espezar a copiar.
+     * @param superMatriz Matriz a la que se le copiarán sus elementos.
+     * @param subMatriz Matriz referencia que solo sirve para dar las dimensiones a la nueva matriz que se retornará.
+     * @return Nueva matriz llena de los elementos de @superMatriz dadas las condiciones listadas.
+     * @throws MatrixException Si alguna de las dimensiones de @subMatriz es mayor que las de @superMatriz, entonces esto significa que no se puede copiar.
+     */
+    public int[][] copiarMatrizSegunCoordernadas(int coordenada_x, int coordenada_y, int[][] superMatriz, int[][] subMatriz) throws MatrixException {
+
+        if (subMatriz.length > superMatriz.length || subMatriz[0].length > superMatriz[0].length)
+             throw new MatrixException ("La superMatriz tiene alguna dimensión mayor que la subMatriz");
+
+        int[][] nuevaMatriz = new int[subMatriz.length][subMatriz[0].length];
 
 
         //Llenamos el nuevo arreglo C a partir de los elementos de B, llenándolo únicamente desde la posición/coordernadas del
         // primer elemento de A dentro de B.
-        for (int i = 0, y = yi; i < C.length; i++, y++) {
-            for (int j = 0, x = xi; j < C[i].length; j++, x++) {
-                C[i][j] = B[y][x];
+        for (int i = 0, y = coordenada_y; i < nuevaMatriz.length; i++, y++) {
+            for (int j = 0, x = coordenada_x; j < nuevaMatriz[i].length; j++, x++) {
+                nuevaMatriz[i][j] = superMatriz[y][x];
             }
         }
 
-        return sonIguales(A, C);
+        return nuevaMatriz;
     }
+
+
 
     /**
      * Método que retorna si existe al menos un elemento @e dentro de la @matriz.
@@ -622,6 +712,8 @@ public class Matriz {
         }
         return false;
     }
+
+
 
     /**
      * Método que retorna un arreglo con la primera posición del @elemento dentro de una @matriz.
@@ -656,6 +748,12 @@ public class Matriz {
     }
 
 
+    /**
+     * Método que verifica si dos matrices son iguales.
+     * Esto se hace comparando los elementos que posean dentro de las mismas posiciones.
+     *
+     * @return True si son iguales. False de lo contrario.
+     */
     public boolean sonIguales(int[][] matrizA, int[][] matrizB) {
 
         if (matrizA.length == matrizB.length) {
@@ -673,7 +771,23 @@ public class Matriz {
                 return true;
             }
         }
-      return false;
+        return false;
+    }
+
+    /**
+     * Método que convierte un arreglo en una matriz de una columna y n filas.
+     * @param arreglo Arreglo a convertir.
+     * @return Una matriz a partir del @arreglo.
+     */
+    public int[][] convertirAMatriz (int[] arreglo){
+        
+        int[][] matrix = new int[arreglo.length][1];
+
+        for (int fila = 0; fila < arreglo.length; fila++) {
+            matrix [fila][0] = arreglo [fila];
+        }
+        
+        return matrix;
     }
 
 
