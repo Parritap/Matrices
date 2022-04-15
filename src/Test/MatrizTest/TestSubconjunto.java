@@ -1,9 +1,7 @@
-package Test;
+package Test.MatrizTest;
 
 import exceptions.MatrixException;
 import model.Matriz;
-
-import java.util.Arrays;
 
 public class TestSubconjunto {
 

@@ -1,16 +1,21 @@
-package Test;
+package Test.MatrizTest;
 
 import exceptions.MatrixException;
 import model.Matriz;
 
-public class TestMatrizSerpiente {
+public class TestMatrizEdificio {
+
     public static void main(String[] args) throws MatrixException {
 
         Matriz matriz = new Matriz();
 
-        int [][] matrix = matriz.generarMatrizSerpiente(4);
+        char[][] matrix = matriz.generarMatrizEdificio(0,0 );
 
         matriz.print(matrix);
 
+
+
+
     }
+
 }

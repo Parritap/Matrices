@@ -1,4 +1,4 @@
-package Test;
+package Test.MatrizTest;
 
 import model.Matriz;
 import exceptions.MatrixException;
