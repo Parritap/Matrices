@@ -5,6 +5,13 @@ import exceptions.MatrixException;
 import java.util.Arrays;
 import java.util.Scanner;
 
+/**
+ * JUAN ESTEBAN PARRA PARA
+ * 1002656555.
+ *
+ * Estaba larguisimo este taller profe. Era semana santa... :(
+ */
+
 public class Matriz {
 
     /**
@@ -251,11 +258,6 @@ public class Matriz {
         int[][] matriz = generarCuadrada(dimension);
         rellenarDiagonal(matriz, 1);
 
-        int limite = dimension;
-
-        for (int i = 0; i < dimension; i++) {
-            limite += i;
-        }
 
         for (int i = 0, j = 0, p = 0; i < dimension; j++) {
 
@@ -834,5 +836,3 @@ public class Matriz {
     }
 
 }
-
-

@@ -1,5 +1,13 @@
 package model;
 
+
+/**
+ * JUAN ESTEBAN PARRA PARA
+ * 1002656555.
+ *
+ * Estaba larguisimo este taller profe. Era semana santa... :(
+ */
+
 public class MyString {
 
     final char[] VOCALES = {'a', 'e', 'i', 'o', 'u'};
