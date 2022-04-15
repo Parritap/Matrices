@@ -253,7 +253,7 @@ public class Matriz {
      * @return Matriz triangular superior cuyos elementos
      * @throws MatrixException Excepción lanzada si la dimensión indicada en el argumento es menor que 2.
      */
-    public int[][] generarMatrizTriangularSuperiorPares(int dimension) throws MatrixException {
+    public int[][] generarMatrizTriangularSupPotencia(int dimension) throws MatrixException {
 
         int[][] matriz = generarCuadrada(dimension);
         rellenarDiagonal(matriz, 1);
