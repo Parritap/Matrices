@@ -791,7 +791,47 @@ public class Matriz {
     }
 
 
-    /*------------------------------------- PUNTO 9---------------------------------- */
+    /*----------------------------- PUNTO 10.2 (hay dos puntos 10 en el taller)---------------------------------- */
+
+    /**
+     * Método que crea un arreglo de la siguiente manera:
+     *
+     * [1, 1, 0, 0, 0]
+     * [1, 1, 1, 1, 0]
+     * [1, 1, 1, 1, 1]
+     * [1, 1, 1, 1, 0]
+     * [1, 1, 0, 0, 0]
+     *
+     * @param dimension Dimensión utilizada para crear una matriz cuadrada en la que luego se imprime como se
+     *                  vio anteriormente. Si la dimensión es par, se le suma una unidad para volverla impar,
+     *                  tal y cómo lo pide el ejericio.
+     * @return Una matriz con las características pedidas.
+     */
+    public int [][] generarMatrizFlecha (int dimension){
+
+        int dim = dimension;
+
+        if ((dim % 2) == 0){
+            dim ++;
+        }
+
+        int [][] matrix = new int [dim][dim];
+
+        int bound = 0; //"Boundaries".
+
+        for (int i = 0; i < dim - 2 ; i+=2, bound++) {
+            for (int j = i; j < i+2; j++) {
+
+                for (int k = 0 + bound; k < dim - bound; k++) {
+                    matrix [k][j] = 1;
+                }
+            }
+        }
+
+        matrix [dim/2][dim-1] =1;
+        
+        return matrix;
+    }
 
 }
 
