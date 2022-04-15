@@ -258,16 +258,20 @@ public class Matriz {
         int[][] matriz = generarCuadrada(dimension);
         rellenarDiagonal(matriz, 1);
 
+        // la variable 'p' es un exponente que crece de 1 en 1.
+        // 'f' para fila
+        // 'c' para columna
+        for (int f = 0, c = 0, p = 0; f < dimension; c++) {
 
-        for (int i = 0, j = 0, p = 0; i < dimension; j++) {
-
-            if (i < j) {
-                matriz[i][j] = (int) Math.pow(2, p);
-                p++;
+            if (f < c) { /* (Esta condición se asegura de solo se afecten los elementos superior a la diagonal)  */
+                matriz[f][c] = (int) Math.pow(2, p); //Se hace la potencia de grado 'p'.
+                p++;                                // Se incrementa el exponente para continuar con la secuencia.
             }
-            if (j == dimension - 1) {
-                i++;
-                j = 0;
+            if (c == dimension - 1) { /*Cuando se llegue al final de la fila (esto es, la ultima columna, o lo que es lo mismo, dimension -1
+                                        entonces saltamos a la siguiente fila y reiniciamos la columna para que empiece desde la izquierda de nuevo
+                                        PD: Escuchate esta canción: https://music.youtube.com/watch?v=fQ6QO9myMME&feature=share */
+                f++;
+                c = 0;
             }
         }
         return matriz;
