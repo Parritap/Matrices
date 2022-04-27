@@ -181,4 +181,48 @@ public class Tarea {
 
     }
 
+
+    public static void  llenarDeAstericos (char [][] matriz){
+
+        int espacios = matriz.length/2;
+
+        if (esRegular (matriz) && matriz[0].length%2 ==1){
+
+            for (int i = 0, cantPrints = 1; espacios<=0 ; i++, espacios--, cantPrints++) {
+                for (int j = espacios+1; j < matriz[i].length; j++) {
+
+
+
+                }
+
+            }
+
+
+
+        }
+
+    }
+
+    private static boolean esRegular(char[][] matriz) {
+        for (int i = 0; i < matriz.length-1; i++) {
+            if (matriz[i].length != matriz[i+1].length)
+                return false;
+        }
+
+        return true;
+
+
+
+
+
+
+
+
+
+
+
+
+
+    }
+
 }
