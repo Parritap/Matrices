@@ -18,7 +18,6 @@ public class Tarea {
         char[][] charMatrix = new char[3][9];
 
         //  int[][] newMatrix = recorrerMatriz(matrix, '-', '+');
-
         //  for (int[] e : newMatrix) {
         //      System.out.println(Arrays.toString(e));
         //  }
