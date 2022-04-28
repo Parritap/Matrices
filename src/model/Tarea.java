@@ -15,7 +15,7 @@ public class Tarea {
         matrix[1] = new int[]{5, 6, 7, 8};
         matrix[2] = new int[]{9, 10, 11, 12};
 
-        char[][] charMatrix = new char[3][8];
+        char[][] charMatrix = new char[3][9];
 
         //  int[][] newMatrix = recorrerMatriz(matrix, '-', '+');
 
