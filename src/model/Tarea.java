@@ -15,6 +15,8 @@ public class Tarea {
         matrix[1] = new int[]{5, 6, 7, 8};
         matrix[2] = new int[]{9, 10, 11, 12};
 
+        char[][] charMatrix = new char[3][8];
+
         //  int[][] newMatrix = recorrerMatriz(matrix, '-', '+');
 
         //  for (int[] e : newMatrix) {
@@ -32,6 +34,9 @@ public class Tarea {
         int[][] matrizRotada = rotarMatriz(matrix, 'a', 3);
 
         Utils.print(matrizRotada);
+
+        llenarDeAstericos(charMatrix);
+        Utils.print(charMatrix);
 
     }
 
@@ -184,20 +189,17 @@ public class Tarea {
 
     public static void  llenarDeAstericos (char [][] matriz){
 
-        int espacios = matriz.length/2;
+        if (esRegular(matriz) && (matriz[0].length %2 ==1)){ //La segunda parte de la condición evalúa que la cantidad de columnas sea impar.
 
-        if (esRegular (matriz) && matriz[0].length%2 ==1){
-
-            for (int i = 0, cantPrints = 1; espacios<=0 ; i++, espacios--, cantPrints++) {
-                for (int j = espacios+1; j < matriz[i].length; j++) {
+            int esp = matriz[0].length/2; //cantidad de espacios.
+            int cantPrint = 1; //Cantidad de astericos a imprimir.
 
 
-
+            for (int i = 0; i < matriz.length ; i++, esp--, cantPrint+=2) {
+                for (int j = esp, aux= cantPrint ; aux >0 && j< matriz[i].length; j++, aux--) {
+                    matriz[i][j] = '*';
                 }
-
             }
-
-
 
         }
 
